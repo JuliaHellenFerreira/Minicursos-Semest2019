@@ -1,0 +1,88 @@
+---
+title: "Conhecendo e manipulando os Sistemas de Informação usando o R"
+author: "Beatriz"
+date: "21 de outubro de 2019"
+output: html_document
+---
+
+# Instalando bibliotecas 
+
+Note que isso não precisa ser feito uma vez no computador. 
+
+```
+install.packages("datasus", dep=T)
+install.packages("read.dbc", dep=T)
+install.packages("devtools")
+devtools::install_github("rfsaldanha/microdatasus")
+
+```
+# Abrindo o banco de dados e explorando o básico usando read.dbc
+
+```{r}
+library(read.dbc)
+
+RJ2016<-read.dbc("DORJ2016.dbc")
+dim(RJ2016)
+head(RJ2016)
+
+```
+
+# Usando o pacote datasus para tabulação online
+
+```{r}
+library(datasus)
+
+SINASC2016=sinasc_nv_uf(uf = "rj",
+             periodo = c(2016),
+             coluna = "Ano do nascimento")
+
+SIM2010=sim_inf10_uf(uf="rj", 
+                     periodo = c(2016),
+              coluna = "Capítulo CID-10")
+
+```
+
+
+# Usando o pacote microdatasus para download das informações individuais
+
+```{r}
+
+library(microdatasus)
+dados <- fetch_datasus(year_start = 2013, year_end = 2014, uf = "RJ", 
+                       information_system = "SIM-DO")
+
+
+save(dados, file='dados_semproc.RData')
+
+dados <- process_sim(dados)
+
+DORJ1314=subset(dados,substr(as.character(CODMUNRES),1,6) ==       substr(as.character(CODMUNOCOR),1,6) & substring(CAUSABAS,1,1)=='I'& substring(CODMUNRES,1,6)==330455,select=c(NUMERODO, TIPOBITO, DTOBITO, DTNASC, IDADEanos, SEXO, RACACOR, ESTCIV, ESC, OCUP, CODMUNRES, LOCOCOR, CODMUNOCOR, ESCMAE, CAUSABAS))
+
+```
+
+
+# para se construir séries - as seleções de características específicas deve ser feita antes - no exemplo abaixo estÃ¡ sendo selecionado tudo
+
+```{r}
+
+serie_dcv_rj=aggregate(DORJ1314$NUMERODO,by=list(DORJ1314$DTOBITO),length) 
+colnames(serie_dcv_rj)=c('data','obcardio')
+plot(serie_dcv_rj$data, serie_dcv_rj$obcardio, type="l")
+
+```
+
+
+####decomposicao da serie
+
+```{r}
+
+
+tsbra<-ts(serie_dcv_rj$obcardio,f=365,start=2013)
+plot(tsbra)
+
+require(graphics)
+d=decompose(tsbra)
+plot(d)
+
+```
+

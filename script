@@ -43,4 +43,30 @@ dados <- fetch_datasus(year_star = 2013,
                         uf = "RJ",
                         information_system = "SIM-DO")
 
+View(dados1)
+
+dados <- process_sim(dados)
+
 View(dados)
+
+DORJ1314=subset(dados,substr(as.character(CODMUNRES),1,6) ==       substr(as.character(CODMUNOCOR),1,6) & substring(CAUSABAS,1,1)=='I'& substring(CODMUNRES,1,6)==330455,select=c(NUMERODO, TIPOBITO, DTOBITO, DTNASC, IDADEanos, SEXO, RACACOR, ESTCIV, ESC, OCUP, CODMUNRES, LOCOCOR, CODMUNOCOR, ESCMAE, CAUSABAS))
+
+View(DORJ1314)
+
+# Série
+
+serie_dcv_rj=aggregate(DORJ1314$NUMERODO,by=list(DORJ1314$DTOBITO),length) 
+colnames(serie_dcv_rj)=c('data','obcardio')
+plot(serie_dcv_rj$data, serie_dcv_rj$obcardio, type="l")
+
+View(serie_dcv_rj)
+
+# Decomposicao da serie
+
+tsbra<-ts(serie_dcv_rj$obcardio,f=365,start=2013)
+plot(tsbra)
+
+require(graphics)
+
+d=decompose(tsbra)
+plot(d)

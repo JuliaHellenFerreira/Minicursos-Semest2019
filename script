@@ -1,0 +1,46 @@
+# Instalando os pacotes necessários para análise
+
+install.packpages("datasus", dep = T)
+install.packages("read.dbc", dep = T)
+install.packages("devtools")
+devtools::install_github("rfsaldanha/microdatasus")
+
+# Usamos o FTD Datasus para baixar o banco de dados:
+
+   ## Fizemos no formato .zip
+
+# Abrindo o banco de dados do computador
+
+library(read.dbc)
+
+RJ2016 <- read.dbc("DORJ2016.dbc")
+dim(RJ2016)
+head(RJ2016)
+
+# Baixando o banco de dados diretamente do Datasus
+
+library(datasus)
+
+SINASC2016 <-  sinasc_nv_uf(uf = "rj",
+                           periodo = c(2016),
+                           coluna = "Ano do nascimento")
+
+View(SINASC2016) 
+
+
+SIM2010 <- sim_inf10_uf(uf = "rj",
+                       periodo = c(2016),
+                       coluna = "Capítulo CID-10")
+
+View(SIM2010)
+
+#
+
+library(microdatasus)
+
+dados <- fetch_datasus(year_star = 2013,
+                        year_end= 2014,
+                        uf = "RJ",
+                        information_system = "SIM-DO")
+
+View(dados)

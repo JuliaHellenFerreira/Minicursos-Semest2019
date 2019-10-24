@@ -1,5 +1,5 @@
 ---
-title: "Conhecendo e manipulando os Sistemas de InformaÁ„o usando o R"
+title: "Conhecendo e manipulando os Sistemas de Informa√ß√£o usando o R"
 author: "Beatriz"
 date: "21 de outubro de 2019"
 output: html_document
@@ -7,7 +7,7 @@ output: html_document
 
 # Instalando bibliotecas 
 
-Note que isso n„o precisa ser feito uma vez no computador. 
+Note que isso n√£o precisa ser feito uma vez no computador. 
 
 ```
 install.packages("datasus", dep=T)
@@ -16,7 +16,7 @@ install.packages("devtools")
 devtools::install_github("rfsaldanha/microdatasus")
 
 ```
-# Abrindo o banco de dados e explorando o b·sico usando read.dbc
+# Abrindo o banco de dados e explorando o b√°sico usando read.dbc
 
 ```{r}
 library(read.dbc)
@@ -27,7 +27,7 @@ head(RJ2016)
 
 ```
 
-# Usando o pacote datasus para tabulaÁ„o online
+# Usando o pacote datasus para tabula√ß√£o online
 
 ```{r}
 library(datasus)
@@ -38,12 +38,12 @@ SINASC2016=sinasc_nv_uf(uf = "rj",
 
 SIM2010=sim_inf10_uf(uf="rj", 
                      periodo = c(2016),
-              coluna = "CapÌtulo CID-10")
+              coluna = "Cap√≠tulo CID-10")
 
 ```
 
 
-# Usando o pacote microdatasus para download das informaÁıes individuais
+# Usando o pacote microdatasus para download das informa√ß√µes individuais
 
 ```{r}
 
@@ -61,7 +61,7 @@ DORJ1314=subset(dados,substr(as.character(CODMUNRES),1,6) ==       substr(as.cha
 ```
 
 
-# para se construir sÈries - as seleÁıes de caracterÌsticas especÌficas deve ser feita antes - no exemplo abaixo est√° sendo selecionado tudo
+# para se construir s√©ries - as sele√ß√µes de caracter√≠sticas espec√≠ficas deve ser feita antes - no exemplo abaixo est√É¬° sendo selecionado tudo
 
 ```{r}
 
